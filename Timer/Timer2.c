@@ -4,11 +4,7 @@
 long int seconds;
 int hh,mm,ss;
 
-void lineClear() {
-	printf("\33[K\033[A\33[K ");
-}
-
-void displayTime() {
+void displayTime() {		//self explanatory, displays time in hh mm ss
 	hh = seconds / 3600;
 	mm = seconds / 60;
 	ss = seconds;
@@ -24,7 +20,7 @@ void displayTime() {
 	printf("\t%d : %02d : %02d\n       ", hh, mm, ss);
 }
 
-void promptTime() {
+void promptTime() {			//will ask user for hours minutes and seconds
 	printf("\t   :    :    \r\t");
 	scanf("%d", &hh);
 	printf("\033[A\t%d : ", hh);
@@ -42,7 +38,7 @@ int main(){
 	promptTime();
 	
 	if (seconds <= 0) {
-		printf("Error: Dumb bitch \n");
+		printf("Error: Only enter numbers that result in between 1 and 9 223 372 036 854 775 807 seconds\n");
 		return 1;
 	}
 	
@@ -53,12 +49,9 @@ int main(){
 
 		if (seconds == 0) {
 			printf("\tTime's up!\n");
+	return 0;
 		}
 	}
 
 }
-
-
-
-
 

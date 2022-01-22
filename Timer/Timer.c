@@ -28,7 +28,7 @@ int main(){
 	scanf("%d", &seconds);								//Ask user for input, int
 	printf("\r\033[A\33[K\r\033[A\33[K\r\033[A\33[K\n");//Cleans 3 lines counting with the current
 	
-	if (seconds <= 0) {
+	if (seconds <= 0) {			//When a letter is entered it usually turns into a 0 apparently, so also a way to avoid this
 		printf("Error: Please choose a number from 1 to 4 294 967 296\n");
 		return 1;
 	}
@@ -38,7 +38,7 @@ int main(){
 		sleep(1);					//Wait one second
 		printf("\033[A\33[K");		//Cleans the line above
 
-		if (seconds == 0) {
+		if (seconds == 0) {			//When Time runs out
 			printf("\tTime's up!\n");
 		}
 	}
