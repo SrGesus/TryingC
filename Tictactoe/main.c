@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 //creates a 3x3 bidimensional char array that will store the X's and O's of the game, 32 represents a space character
 char board[3][3] = {{32,32,32},{32,32,32},{32,32,32}};	
@@ -13,11 +14,11 @@ void displayBoard();
 void displayRow(int num);
 void clearLine(int num);
 int MainMenu();
-int game();
+void game();
 void updateCursor();
 void positionCursor(char r, char c);
-int checkVictory();
-
+int checkVictor();
+void clearBoard();
 
 int main() {
 	//We will run the entire game in a loop, so once a match is done it will come back to the start menu
@@ -33,15 +34,15 @@ int main() {
 }
 
 
-int game() {
+void game() {
 	
-	bool inProgress = 1;
 	bool firstTurn = 1;
+	leave = 0;
+	//char board[3][3] = {{32,32,32},{32,32,32},{32,32,32}};	
 	
 	//let's use a boolean "turn" to determine whose turn is it
 	//the boolean is then switched every update
-	//as long as inProgress = 1 it will run, inProgress will be 1 until victory or all spaces filled
-	for(bool turn = 0;; turn = !turn) {
+	for(bool turn = 0 ;; turn = !turn) {
 		//0 shall be O and 1 shall be X (makes sense)
 		if (turn) {
 			player = 'X';
@@ -55,23 +56,111 @@ int game() {
 		
 		//if c is entered go back to main menu
 		if(leave) {
-			return 0;
+			return;
 		}
 		
 		//remember arrays start at 0, so we will subract one to the row and column values
 		x--;
 	   	y--;
-		board[x][y] = player;
-		
+
+		//if the space is blank, set space to player (X or O)
+		if (board[x][y] == 32) {
+			board[x][y] = player;
+		} else {	//else redo this turn
+			turn = !turn;
+		}
+
 		if (firstTurn) {
-			board[0][0] = 32;	//the enter from the mainMenu is caught by the getchar in the first turn even if flushed, so this is the simplest workaround
+			clearBoard();	//clear the board on the firstTurn	
 			firstTurn = 0;
+		}
+		
+		switch (checkVictor()) {
+			case 0:
+				break;
+			char temp;
+			
+			//if there's a tie
+			case 1:
+				printf("\33[D%c", player);
+				printf("\33[0;0H\33[9B\tThere has been a Tie!");
+				printf("\n\n\n\tPress any key to continue...");
+				system("stty raw");
+				temp = getchar();
+				system("stty sane");
+				fflush(stdout);
+				return;
+				break;
+
+			case 79:
+				printf("\33[D%c", player);
+				printf("\33[0;0H\33[9B\tThe Noughts (O) have won!");
+				printf("\n\n\n\tPress any key to continue...");
+				system("stty raw");
+				temp = getchar();
+				system("stty sane");
+				fflush(stdout);
+				return;
+				break;
+
+			case 88:
+				printf("\33[D%c", player);
+				printf("\33[0;0H\33[9B\tThe Crosses (X) have won!");
+				printf("\n\n\n\tPress any key to continue...");
+				system("stty raw");
+				temp = getchar();
+				system("stty sane");
+				fflush(stdout);
+				return;
+				break;
+		}
+	}
+}
+
+//Victory is achieved when either every row or column is the same player or diagonals but not blank ( != 32)
+//Return the victor: 0 the game continues; 79 is player O; 88 player X; 1 is tie
+int checkVictor() {
+
+	bool foundSpace = 0;
+	//for every row if all the columns equal but not blank return true
+	for(int i = 0; i < 3; i++) {
+		if(board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != 32) {
+			return board[i][0];
 		}
 	}
 
+	//for every column if all the rows are equal but not blank return true
+	for(int i = 0; i < 3; i++) {
+		if(board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[0][i] != 32) {
+			return board[0][i];
+		}
+	}
+
+	//if the diagonals are equal but not blank 
+	if(board[0][0] == board[1][1] && board[1][1] == board [2][2] && board[1][1] != 32) {
+		return board[1][1];	
+	}
+	
+	if(board[0][2] == board[1][1] && board[1][1] == board [2][0] && board[1][1] != 32) {
+		return board[1][1];	
+	}
+
+	//check for every slot on the board for a space (32), if one is found, foundSpace set to 1
+	//if not space is found, declare a tie
+	for(int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			if (board[i][j] == 32) {
+				foundSpace = 1;
+			}
+		}
+	}
+	if (!foundSpace) {
+		return 1;
+	}
+	return 0;
 }
 
-//We will run this until Enter is pressed
+//We will run this until Enter or space bar is pressed
 //This will take the user input and change x or y based on it
 void updateCursor () {
 
@@ -90,7 +179,7 @@ void updateCursor () {
 		clearLine(0);
 		displayBoard();
 
-		positionCursor(r, c);
+		positionCursor(r, c);	//positions cursor on the promted position
 		
 		//print the Player (X or O) and move back cursor
 		printf("%c\33[D", player);
@@ -121,6 +210,7 @@ void updateCursor () {
 			//For some reason Enter seems to input as both 13 and 10
 			case 13:
 			case 10:
+			case 32:
 				x = r;
 				y = c;
 				return;
@@ -170,6 +260,13 @@ void positionCursor(char r, char c) {
 	}
 }
 
+void clearBoard() {
+	for (int i=0 ; i < 3 ; i++) {
+		for (int j=0; j < 3; j++) {
+			board[i][j] = 32;
+		}
+	}
+}
 
 // displays the Tic-Tac-Toe Board as per the board array
 void displayBoard() {
