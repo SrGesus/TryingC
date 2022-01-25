@@ -7,16 +7,20 @@ Sluntations.
 This was the first, a simple clock using time() from the time.h header to get used with simple functions like printf, loops, and variables, converting UNIX into hours minutes and seconds, etc.
 
 ## Timer
-Looks close the clock but counting down and accepting user input through scanf(), also trying making my own functions ( displayTime() in this case)
+Looks close to the clock but counting down and accepting user input through scanf(), also trying to makemy own functions ( displayTime() in this case)
 
 ## Timer2
 Pretty similar to the other timer but with a more intuitive display, hours, minutes, and seconds are entered and it counts down just like the last one
 
-## ~~Stopwatch (W.I.P)
-The Stopwatch will count up until user provides input, this will require to run multiple processes via fork() or other form, will also take the opportunity to use multiple source files to understand how it works~~ Too complicated for now
+## Tic-Tac-Toe 
+Did a simple game of tic-tac-toe, users are able to move between the cells with arrows and hit enter to place the X or O depending on whose turn it is and then a winner or tie is declared, and then the user may play another game. This allowed be to learn a bit about arrays, as i thought a bidimensional array would be the best option to represent the board, among other things.
 
-## Interactive Interface
-Instead of the Stopwatch I will do a simple interface, that doesn't require multi processing, that will connect you to the Timer, clock, or leave the program
+## Minmax algorithm
+I'll attempt to devise an algorithm to play tic tac toe against (and hopefully lose every time) an ai if you will, this will require various steps and will allow me to learn about algorithms such as this.
+It should take in the state of the game and who is the AI playing as (X or O) as parameters and then return the position that it will play as.
 
-## Tic-Tac-Toe (Haven't Started)
-Will attempt to do a simple game of tic-tac-toe on the terminal that will be operated with arrow keys and enter to be used and be able to determine the victor
+We'll start with the base (and more easy) steps
+To do list:
+- [ ] Function that determines if the game state you pass on as an argument means the end of the game, I've done this in tic tac toe already but with a dimensional array, let's call it terminal function
+- [ ] Function that assigns utility to such a terminal state
+- [ ] Function that converts the array[3][3] that is in the game to a array[9] that will be easier to deal with in the loops that the algorithm will require
