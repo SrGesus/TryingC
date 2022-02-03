@@ -1,6 +1,7 @@
 //function to determine whether inputed state is terminal
 //having a separate utility and terminal function would be redundant as it would check the same criteria, thus:
 //the function returns the winner: 1 (the AI), -1 (the opponent), 0 (a tie) or 2 (not a terminal state)
+//
 #include "include.h"
 
 /*

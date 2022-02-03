@@ -15,7 +15,7 @@ int minimax(short state[9]) {
 			potentialstate[i] = 1;
 
 			//this will start the recursive algorithm
-			int value = maxvalue(potentialstate);
+			int value = minvalue(potentialstate);
 			
 			//find the first play that leads to the greatest utility
 			if (max < value) {
