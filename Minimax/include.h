@@ -13,7 +13,7 @@ struct Options {
 	bool leave; 	//If 1 will cause main.c to exit
 };
 
-short board[9];
+//short board[9];
 
 //function declarations
 
